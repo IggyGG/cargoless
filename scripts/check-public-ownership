@@ -10,6 +10,7 @@ readonly -a governed_paths=(
   Cargo.toml
   crates/cargoless/Cargo.toml
   .github/workflows/release.yml
+  deploy/jobs/build-appserve-image.yaml
   docs/release/PHASE-D-OPERATOR-HANDOFF.md
   docs/design/D-CI-RESILIENCE.md
   docs/launch/AC9-REVIEWER-PACKET.md
