@@ -379,7 +379,7 @@ jobs:
   # = `cargoless` to match binstall's `{name}` template, which resolves to
   # package.name NOT [[bin]].name. D1 RESOLVED: package == binary ==
   # `cargoless`, was `tf-cli`/`tftrunk` pre-D1):
-  #   https://github.com/TriformAI/cargoless/releases/download/v0.1.0/
+  #   https://github.com/IggyGG/cargoless/releases/download/v0.1.0/
   #     cargoless-v0.1.0-x86_64-unknown-linux-gnu.tgz
   #     cargoless-v0.1.0-aarch64-apple-darwin.tgz
   #     cargoless-v0.1.0-x86_64-apple-darwin.tgz

@@ -130,6 +130,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
+      - name: Verify public ownership metadata
+        run: ./scripts/check-public-ownership
       # `--no-fail-fast` so ONE failing binary does not hide every later one.
       #
       # Without it, `cargo test --workspace` stops at the first test binary that

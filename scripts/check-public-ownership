@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+readonly old_owner='github\.com/TriformAI/cargoless'
+readonly new_repo='https://github.com/IggyGG/cargoless'
+readonly -a governed_paths=(
+  README.md
+  CONTRIBUTING.md
+  ROADMAP.md
+  Cargo.toml
+  crates/cargoless/Cargo.toml
+  .github/workflows/release.yml
+  docs/release/PHASE-D-OPERATOR-HANDOFF.md
+  docs/design/D-CI-RESILIENCE.md
+  docs/launch/AC9-REVIEWER-PACKET.md
+  docs/launch/BLOG-DRAFT.md
+)
+
+if matches="$(git grep -nE "$old_owner" -- "${governed_paths[@]}" || true)" && [[ -n "$matches" ]]; then
+  printf 'public ownership check failed: old owner remains in current public surfaces:\n%s\n' "$matches" >&2
+  exit 1
+fi
+
+for path in README.md CONTRIBUTING.md Cargo.toml crates/cargoless/Cargo.toml; do
+  git grep -qF "$new_repo" -- "$path" \
+    || { echo "public ownership check failed: $path lacks the canonical IggyGG repository URL" >&2; exit 1; }
+done
+test -f SECURITY.md \
+  || { echo "public ownership check failed: SECURITY.md is missing" >&2; exit 1; }
+
+echo "public ownership check passed for IggyGG/cargoless"
