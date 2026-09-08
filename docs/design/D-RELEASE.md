@@ -1,5 +1,10 @@
 # D-RELEASE — cargoless release & distribution pipeline (CWDL-71)
 
+> **2026-09 ownership update:** The canonical public repository is now
+> `https://github.com/IggyGG/cargoless`. Forgejo remains the protected internal
+> CI and integration authority. Historical references below are retained as
+> evidence of the original release design and may name the previous owner.
+
 **Status:** DESIGN (pre-emptive, pre-AC#7-gate). Approved framing per team-lead
 2026-05-17 + refreshed 2026-05-17 for §8 #8 resolution to option **(b) GitHub
 mirror**. **Not ratified to fire.**

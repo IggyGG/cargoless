@@ -35,7 +35,7 @@ workspace = true
 # integration path too — that's actually better coverage.
 #
 # Install consequence — the documented install command for outside users is:
-#   cargo install --git https://github.com/TriformAI/cargoless.git cargoless \
+#   cargo install --git https://github.com/IggyGG/cargoless.git cargoless \
 #                 --branch main --locked
 # (no `--features integration` needed anymore). The explicit `cargoless`
 # package arg is REQUIRED because `cargo install --git` walks the entire repo
@@ -145,7 +145,7 @@ futures-executor = { version = "0.3", optional = true }
 #
 # Template variables binstall resolves:
 #   {repo}            — package.repository (workspace-inherited from root
-#                       Cargo.toml → https://github.com/TriformAI/cargoless)
+#                       Cargo.toml → https://github.com/IggyGG/cargoless)
 #   {name}            — package.name (the published crate name)
 #   {version}         — package.version (without leading "v")
 #   {target}          — target triple, e.g. x86_64-unknown-linux-gnu

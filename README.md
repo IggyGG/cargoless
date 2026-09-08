@@ -194,7 +194,7 @@ deferred browser adapter, and the parking lot.
 
 ## Source & mirrors
 
-- **Canonical public source:** [`github.com/TriformAI/cargoless`](https://github.com/TriformAI/cargoless) — the OSS-facing home; where issues, PRs, releases, and prebuilts live.
+- **Canonical public source:** [`github.com/IggyGG/cargoless`](https://github.com/IggyGG/cargoless) — the OSS-facing home; where issues, PRs, releases, and prebuilts live.
 - **Internal dev mirror:** [`forgejo.triform.dev/triform/cargoless`](https://forgejo.triform.dev/triform/cargoless) — where the agent team's integration CI runs (dedicated cargoless-builder pod + `scripts/ci-gate` + Forgejo Actions). Contributor PRs are welcome on GitHub; the maintainers cherry-pick into Forgejo for the integration loop.
 
 ## Install
@@ -207,7 +207,7 @@ deferred browser adapter, and the parking lot.
 **Install the current development tip (works today):**
 
 ```bash
-cargo install --git https://github.com/TriformAI/cargoless.git \
+cargo install --git https://github.com/IggyGG/cargoless.git \
               cargoless --branch main --locked
 ```
 
@@ -670,7 +670,7 @@ hardening in progress. The version tag is **v0.2.0**
 (operator-decided 2026-05-19); the public-launch GO remains the
 **operator's decision** — this document states capabilities, not a
 ship date. Tracked
-publicly via [GitHub Issues](https://github.com/TriformAI/cargoless/issues);
+publicly via [GitHub Issues](https://github.com/IggyGG/cargoless/issues);
 the internal agent-team backlog lives in Plane (project "CWDL"). See
 [`ROADMAP.md`](ROADMAP.md) for the acceptance criteria and the
 deferred / parking-lot phases.

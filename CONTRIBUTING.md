@@ -17,11 +17,11 @@ Rust or Rust+WASM — both are in scope post-#241 de-WASM-gate).
    tier (`build --watch --out`) engages only on `cdylib + wasm32` /
    `leptos` workspaces, by nature. Report anything that surprises you.
 3. **Open an issue** at
-   [github.com/TriformAI/cargoless/issues](https://github.com/TriformAI/cargoless/issues)
+   [github.com/IggyGG/cargoless/issues](https://github.com/IggyGG/cargoless/issues)
    describing what you saw. Bug, feature request, doc gap, "this command
    confused me for 10 minutes" — all welcome.
 4. **For code changes**, open a PR against `main` at
-   [github.com/TriformAI/cargoless](https://github.com/TriformAI/cargoless).
+   [github.com/IggyGG/cargoless](https://github.com/IggyGG/cargoless).
    See "How code changes flow into the project" below for what happens
    after that.
 
@@ -31,11 +31,11 @@ maintainers would rather close a duplicate than miss a real signal.
 ## Where to file what
 
 - **Bug reports / feature requests:**
-  [GitHub Issues](https://github.com/TriformAI/cargoless/issues)
+  [GitHub Issues](https://github.com/IggyGG/cargoless/issues)
 - **Pull requests:** open against `main` at
-  [github.com/TriformAI/cargoless](https://github.com/TriformAI/cargoless)
+  [github.com/IggyGG/cargoless](https://github.com/IggyGG/cargoless)
 - **Open-ended discussion / questions / ideas:**
-  [GitHub Discussions](https://github.com/TriformAI/cargoless/discussions)
+  [GitHub Discussions](https://github.com/IggyGG/cargoless/discussions)
   on the same repo
 
 GitHub is the canonical public face of the project. The internal

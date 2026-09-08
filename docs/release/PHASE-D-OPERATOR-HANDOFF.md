@@ -23,7 +23,7 @@ is **one command**:
 git tag -a v0.2.0 <ratified-sha> -m "cargoless 0.2.0 — first public release"
 git push origin v0.2.0          # → Forgejo
 # Forgejo→GitHub push-mirror (sync_on_commit, §8 #9) auto-replicates the
-# tag to github.com/TriformAI/cargoless within ~3–15s.
+# tag to github.com/IggyGG/cargoless within ~3–15s.
 ```
 
 GitHub's receipt of the mirrored tag fires `.github/workflows/release.yml`.
@@ -55,7 +55,7 @@ On `v[0-9]+.*` tag arrival at GitHub, `.github/workflows/release.yml`:
 
 **Result**: a GitHub release at `v0.2.0` with three prebuilt tarballs.
 End users immediately get:
-- `cargo install --git https://github.com/TriformAI/cargoless.git cargoless --tag v0.2.0 --locked` (source, any rustc platform)
+- `cargo install --git https://github.com/IggyGG/cargoless.git cargoless --tag v0.2.0 --locked` (source, any rustc platform)
 - `cargo binstall cargoless` (prebuilt: linux-x86_64 + macOS aarch64/x86_64; falls back to `cargo install` on other targets)
 
 ---
@@ -97,7 +97,7 @@ pre-stage the token once:
 1. **forgejo.triform.dev** → User Settings → Applications → "Generate New
    Token". Name `cargoless-ci-readonly`. Scope: **read-only repository**
    (enough to GET commit statuses on `triform/cargoless`; no write).
-2. **github.com/TriformAI/cargoless** → Settings → Secrets and variables →
+2. **github.com/IggyGG/cargoless** → Settings → Secrets and variables →
    Actions → "New repository secret". Name **exactly**
    `FORGEJO_READONLY_TOKEN`. Value = the token from step 1.
 
@@ -116,7 +116,7 @@ kubectl exec -n forgejo <forgejo-pod> -- \
   --scopes read:repository --raw
 # `--raw` = bare-token stdout → capture into a var, never echo/log;
 # pipe directly:  printf %s "$TOK" | gh secret set FORGEJO_READONLY_TOKEN \
-#   --repo TriformAI/cargoless
+#   --repo IggyGG/cargoless
 ```
 Least-privilege confirmed post-mint via an authed `GET .../tokens`
 (scopes must be exactly `["read:repository"]`). Zero token-value
@@ -196,7 +196,7 @@ State as of skeleton-draft 2026-05-17 (✅ done / ⏳ pending / TBD = fill at fi
 [✅] §8 #4 CHANGELOG format + scaffold — Keep a Changelog v1.1.0
 [✅] §8 #6 GitHub asset-URL shape — verified (static analysis + PKG/BIN fix
      + Phase-C live: sha256 byte-verified, layout==binstall bin-dir)
-[✅] §8 #8 canonical install URL — github.com/TriformAI/cargoless, seeded,
+[✅] §8 #8 canonical install URL — github.com/IggyGG/cargoless, seeded,
      anonymous install verified end-to-end
 [✅] §8 #9 Forgejo→GitHub push-mirror — live, sync_on_commit (Phase-C:
      tag+branch replication validated ~3–15s across 5 fires)
@@ -221,7 +221,7 @@ State as of skeleton-draft 2026-05-17 (✅ done / ⏳ pending / TBD = fill at fi
          .../commits/<sha>/statuses` → context present) AND
          forgejo.triform.dev reachable — else tag-validate hard-fails
      ( ) after `git push origin v0.2.0`: within 60s the tag is on
-         github.com/TriformAI/cargoless AND a `release.yml` run started
+         github.com/IggyGG/cargoless AND a `release.yml` run started
          — else mirror health (Forgejo→Settings→Mirroring) + the
          break-glass `git push github v0.2.0` fallback
 KNOWN LIMITATION (documented, NOT a gate): x86_64-apple-darwin (Intel
@@ -250,7 +250,7 @@ If `v0.2.0` ships and a launch-blocker is discovered post-tag:
 
 1. **Delete the GitHub release + tag**:
    ```bash
-   gh release delete v0.2.0 --repo TriformAI/cargoless --yes --cleanup-tag
+   gh release delete v0.2.0 --repo IggyGG/cargoless --yes --cleanup-tag
    git push origin --delete v0.2.0     # also remove from Forgejo
    ```
 2. **crates.io yank** (if any crate was already `cargo publish`'d — yank

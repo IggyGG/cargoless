@@ -137,7 +137,7 @@ appendix block itself is removed at publish — it is scaffolding.)
    final narrative).
 5. **Repo-URL audit.** Zero `forgejo.triform.dev` URLs in
    contributor-facing copy (Forgejo is internal-CI only;
-   contributor-facing = `github.com/TriformAI/cargoless`).
+   contributor-facing = `github.com/IggyGG/cargoless`).
 6. **D1-name consistency.** No `tftrunk` / `tf-cli` / `tf-proto` /
    `tf-cas` / `tf-core` / `<pubname>=TBD` in the published copy
    (post-#97 full one-token brand on `main`; D1-completeness

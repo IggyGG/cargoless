@@ -198,7 +198,7 @@ v0.1 auto-narrow change makes the narrowed config the default. Saying
 project exists to not do.
 
 That summary is now **two-source-confirmed** for CPU
-([`AC7-THROUGHPUT-REPORT §8.5`](https://github.com/TriformAI/cargoless/blob/main/docs/bench/AC7-THROUGHPUT-REPORT.md#85-clean-c2-109--headline-two-source-confirmed),
+([`AC7-THROUGHPUT-REPORT §8.5`](https://github.com/IggyGG/cargoless/blob/main/docs/bench/AC7-THROUGHPUT-REPORT.md#85-clean-c2-109--headline-two-source-confirmed),
 two independent methodologies that share only the correctness
 invariants — Δ≈1%) and refined for memory into the **honest tiered
 ladder** below.
@@ -225,9 +225,9 @@ CPU headline is Model-R-invariant by construction.
 
 Not one number — a ladder, each rung with its own provenance and gate.
 Numbers from
-[`AC7-THROUGHPUT-REPORT §10`](https://github.com/TriformAI/cargoless/blob/main/docs/bench/AC7-THROUGHPUT-REPORT.md#10-stage-2--per-tier-rss-delta)
+[`AC7-THROUGHPUT-REPORT §10`](https://github.com/IggyGG/cargoless/blob/main/docs/bench/AC7-THROUGHPUT-REPORT.md#10-stage-2--per-tier-rss-delta)
 (per-tier RSS-delta factorial) +
-[`D-RAM-TIERS.md`](https://github.com/TriformAI/cargoless/blob/main/docs/design/D-RAM-TIERS.md).
+[`D-RAM-TIERS.md`](https://github.com/IggyGG/cargoless/blob/main/docs/design/D-RAM-TIERS.md).
 
 **Under Model R this ladder is a secondary constant-factor, not the
 fleet-scale lever.** It applies to the *one* rust-analyzer the
@@ -261,7 +261,7 @@ Under Model R's repo-scoped daemon — **one** rust-analyzer
 LSP-overlay-multiplexed across the workspace-cluster — the answer is
 **measured flat**, on the real wired `serve --repo` daemon,
 N ∈ {1,2,4,8,16,20}
-([`AC7-THROUGHPUT-REPORT §11.4`](https://github.com/TriformAI/cargoless/blob/main/docs/bench/AC7-THROUGHPUT-REPORT.md)
+([`AC7-THROUGHPUT-REPORT §11.4`](https://github.com/IggyGG/cargoless/blob/main/docs/bench/AC7-THROUGHPUT-REPORT.md)
 — Model-R Leg-C v4, measured-not-extrapolated, replacing the prior
 cycle's Model-A "~19.4 GiB BORDERLINE" extrapolation):
 
@@ -329,7 +329,7 @@ reclaim ≈88–97 % validated; sustained magnitude scales with
 ### Latency: two tiers, not one number
 
 Raw save→verdict is reported in **two tiers**
-([`D-A2-RENEGOTIATION.md`](https://github.com/TriformAI/cargoless/blob/main/docs/design/D-A2-RENEGOTIATION.md)):
+([`D-A2-RENEGOTIATION.md`](https://github.com/IggyGG/cargoless/blob/main/docs/design/D-A2-RENEGOTIATION.md)):
 a **RA-incremental hint** (AC#2a — median ≤1 s, ≈0.74 s
 field-measured; can flip RED instantly, does not by itself prove
 compilation) and the **authoritative cargo-check verdict** (AC#2b —
@@ -393,7 +393,7 @@ and `ac7-verdict` keys on the release SHA.
 > environment.
 
 ```bash
-cargo install --git https://github.com/TriformAI/cargoless.git \
+cargo install --git https://github.com/IggyGG/cargoless.git \
               cargoless --branch main --locked
 ```
 
@@ -484,7 +484,7 @@ granularity, replacing `trunk build` internals, hot-swap WASM, CI
 integration, Windows support. These are the ideas that earn their own
 design pass if and when v0 / v0.1 prove the foundation.
 
-Roadmap details: [`ROADMAP.md`](https://github.com/TriformAI/cargoless/blob/main/ROADMAP.md)
+Roadmap details: [`ROADMAP.md`](https://github.com/IggyGG/cargoless/blob/main/ROADMAP.md)
 in the repo.
 
 ---
@@ -584,13 +584,13 @@ The launch-hardening process for this v0 was 12 field findings over
 3 weeks of dogfooding a real Leptos project on a clean Linux box; 11
 fixed before launch, 1 closed as a design question (`cargoless clean`
 semantics — non-breaking, safe-either-way). The full evidence trail
-is at [`docs/dogfood/PHASE-2-REPORT.md`](https://github.com/TriformAI/cargoless/blob/main/docs/dogfood/PHASE-2-REPORT.md).
+is at [`docs/dogfood/PHASE-2-REPORT.md`](https://github.com/IggyGG/cargoless/blob/main/docs/dogfood/PHASE-2-REPORT.md).
 
 For the launch fortnight, the maintainers commit to a 48-hour
 acknowledgement window on every new issue and PR. After that, the
 sustainable cadence is one-week acknowledgement, with launch-blocker
 urgency preserved for verdict-honesty / never-publish-red / install
-regressions. The commitment is in [`CONTRIBUTING.md`](https://github.com/TriformAI/cargoless/blob/main/CONTRIBUTING.md);
+regressions. The commitment is in [`CONTRIBUTING.md`](https://github.com/IggyGG/cargoless/blob/main/CONTRIBUTING.md);
 a missed acknowledgement is itself a GitHub issue.
 
 ---
@@ -618,7 +618,7 @@ The ones we want to call out specifically:
   possible at all.
 
 The agent team that built cargoless is documented in
-[`.claude/`](https://github.com/TriformAI/cargoless/tree/main/.claude)
+[`.claude/`](https://github.com/IggyGG/cargoless/tree/main/.claude)
 metadata — the team config, the per-role prompts, the build/test
 discipline. Anyone curious about LLM-driven OSS engineering at this
 scale is welcome to look. Outside maintainer review of this launch
@@ -629,13 +629,13 @@ post is requested and gratefully received.
 ## Try it, file what breaks, tell us what's missing
 
 ```bash
-cargo install --git https://github.com/TriformAI/cargoless.git \
+cargo install --git https://github.com/IggyGG/cargoless.git \
               cargoless --branch main --locked
 ```
 
-Repository: [github.com/TriformAI/cargoless](https://github.com/TriformAI/cargoless)
-Issues: [github.com/TriformAI/cargoless/issues](https://github.com/TriformAI/cargoless/issues)
-Discussions: [github.com/TriformAI/cargoless/discussions](https://github.com/TriformAI/cargoless/discussions)
+Repository: [github.com/IggyGG/cargoless](https://github.com/IggyGG/cargoless)
+Issues: [github.com/IggyGG/cargoless/issues](https://github.com/IggyGG/cargoless/issues)
+Discussions: [github.com/IggyGG/cargoless/discussions](https://github.com/IggyGG/cargoless/discussions)
 
 If something surprises you, that's a finding the launch sequence
 wants to hear about. Verdict→trust only works if the people running

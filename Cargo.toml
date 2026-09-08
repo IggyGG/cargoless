@@ -26,7 +26,7 @@ version = "0.4.0"
 # Mirror direction (§8 #9 (i)): Forgejo→GitHub push-mirror is LIVE
 # (sync_on_commit=true; configured 2026-05-17).
 # Also resolves: §8 #2 Mac builder via GH Actions free-tier macos-{13,14}.
-repository = "https://github.com/TriformAI/cargoless"
+repository = "https://github.com/IggyGG/cargoless"
 # NOTE: the published product name is open decision D1 (Plane CWDL-12).
 # The repo/working identifier is "cargoless"; the shipping name is still the
 # formal D1 decision. `tf` is NOT it — it collides with Terraform.

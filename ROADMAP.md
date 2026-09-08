@@ -410,7 +410,7 @@ shipped.)
 
 ## Where work is tracked
 
-- **Public:** [GitHub Issues](https://github.com/TriformAI/cargoless/issues) — the canonical surface for outside contributors.
+- **Public:** [GitHub Issues](https://github.com/IggyGG/cargoless/issues) — the canonical surface for outside contributors.
 - **Internal:** the agent team uses a Plane project ("CWDL") that mirrors
   the structure above; GitHub Issues is authoritative for community-facing
   work and the Plane copy is for the agent-driven dev loop. The two are

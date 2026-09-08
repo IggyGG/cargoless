@@ -32,7 +32,7 @@ pod + cross-system coupling) for every member of that class.
  operator ── git tag vX ──► Forgejo (forgejo.triform.dev, triform/cargoless)
                               │  ├─ .forgejo/workflows/ci.yml  (build/test/fmt/clippy/bench)
                               │  │     bench POSTs `s1-ac2-verdict` commit status
-                              │  └─ push-mirror (sync_on_commit) ──► GitHub (TriformAI/cargoless)
+                              │  └─ push-mirror (sync_on_commit) ──► GitHub (IggyGG/cargoless)
                               │                                        └─ .github/workflows/release.yml
                               │                                             tag-validate ─┐
                               │   release.yml@GitHub  ◄── FORGEJO_READONLY_TOKEN ──────────┘
@@ -123,7 +123,7 @@ launch tag and **nothing happens anywhere** — no run, no error, no signal
 (the worst failure mode: silent non-launch). **Proposed hardening:**
 - **V0-RESIDUAL (now):** PHASE-D §0 launch runbook gains an explicit
   post-push verification: "within 60 s, `v0.1.0` is on
-  github.com/TriformAI/cargoless **and** a `release.yml` run has started;
+  github.com/IggyGG/cargoless **and** a `release.yml` run has started;
   if not → mirror health (Forgejo repo → Settings → Mirroring) and the
   documented `git push github vX.Y.Z` manual fallback." (PHASE-D §0
   currently says the operator does NOT push github — keep that as the
