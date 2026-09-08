@@ -314,10 +314,10 @@ piecemeal rename spread across 10 commits.
 
 ## What's NOT in this inventory
 
-- **GitHub repo URL** (`github.com/TriformAI/cargoless`) — this stays
-  fixed per D-RELEASE §8 #8 resolution; renaming the GitHub repo would
-  break every existing `cargo install --git ...` reference in the wild.
-  The repo URL is decoupled from the product name.
+- **GitHub repo URL** — the product name remains `cargoless`, while repository
+  ownership moved to `github.com/IggyGG/cargoless` in 2026-09. GitHub's native
+  transfer redirect preserves old install links; all current examples use the
+  canonical IggyGG URL.
 - **Plane project name** ("CWDL") — internal tracker; unaffected by D1.
 - **Internal team agent names** (`tf-trunk` team in `~/.claude/teams/`)
   — agent-coordination state; unaffected by D1.

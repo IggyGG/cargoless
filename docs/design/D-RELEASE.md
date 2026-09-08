@@ -72,7 +72,7 @@ in-`Cargo.toml` surface that needs to match the draft.
 |---|---|---|
 | Per-branch CI gate (PRs, ci-gate, S1/AC#2 bench, etc.) | **Forgejo** | `.forgejo/workflows/ci.yml` (UNCHANGED) + `scripts/ci-gate` (dedicated k8s builder pod) |
 | Release pipeline (tag → prebuilts → release-page assets) | **GitHub Actions** | `.github/workflows/release.yml` (NEW — currently `.draft`) |
-| Source of truth | **GitHub (canonical) + Forgejo (mirror)** | TriformAI/cargoless on github.com; push-mirrored from forgejo.triform.dev/triform/cargoless |
+| Source of truth | **GitHub (canonical) + Forgejo (integration)** | IggyGG/cargoless on github.com; reviewed main and tags are published from forgejo.triform.dev/triform/cargoless |
 
 The PR/integration loop stays on Forgejo because that's where the dedicated
 `cargoless-builder` pod + ci-gate live (kubectl-readable logs, warm PVC
@@ -133,7 +133,7 @@ or `ubuntu-latest` (for GH Actions release matrix).
 ### 3.1 Universal source install (every Rust platform)
 
 ```
-cargo install --git https://github.com/TriformAI/cargoless --tag v0.1.0
+cargo install --git https://github.com/IggyGG/cargoless --tag v0.1.0
 ```
 
 **Or, once published to crates.io:**
@@ -148,20 +148,20 @@ Intel/ARM, even Windows for the brave (Windows is v1 parking-lot for
 basis). This is the **headline install path** in the README. Slow
 (local compile of the dep graph) but universal.
 
-> **URL confirmed.** `TriformAI` is the operator-confirmed GitHub org
-> (2026-05-17). `[workspace.package].repository` in the root `Cargo.toml`
-> now points at `https://github.com/TriformAI/cargoless`; the `{repo}`
+> **URL confirmed.** `IggyGG` is the operator-confirmed GitHub owner after the
+> 2026-09 ownership migration. `[workspace.package].repository` in the root
+> `Cargo.toml` now points at `https://github.com/IggyGG/cargoless`; the `{repo}`
 > template in `[package.metadata.binstall]` resolves from that one field.
 > Forgejo (`forgejo.triform.dev/triform/cargoless`) remains the
 > integration-CI side but is NOT the canonical user-facing URL after §8 #8
 > resolution. Forgejo→GitHub push-mirror (§8 #9 option (a)) is **live**:
 > every push to Forgejo `main` auto-replicates to GitHub within seconds
 > (`sync_on_commit: true`). End-to-end install proven anonymously:
-> `cargo install --git https://github.com/TriformAI/cargoless.git tf-cli
+> `cargo install --git https://github.com/IggyGG/cargoless.git tf-cli
 > --branch main --locked` succeeds in a clean env. (Historical: that probe
 > used the pre-D1 package arg `tf-cli`; post-D1 (#87) the package is
 > `cargoless`, so the live command is now
-> `cargo install --git https://github.com/TriformAI/cargoless.git cargoless
+> `cargo install --git https://github.com/IggyGG/cargoless.git cargoless
 > --branch main --locked` — see §8 #1.)
 
 ### 3.2 Prebuilts via `cargo binstall` — three targets at first release
@@ -385,8 +385,8 @@ with the design — not hidden in the operator's head.
    --dry-run` to confirm).
 5. `[workspace.package].version` bumped from missing → `0.1.0`; all crates
    inherit (§4.1).
-6. `[workspace.package].repository` set to `https://github.com/<ORG>/cargoless`
-   (the real org/repo, no longer `TriformAI`).
+6. `[workspace.package].repository` set to
+   `https://github.com/IggyGG/cargoless`.
 7. `CHANGELOG.md` has a `## 0.1.0` heading committed.
 8. GitHub repo created; Forgejo→GitHub push-mirror configured (or operator
    manually pushes); first throwaway test tag `v0.0.1-rc.1` fired to verify
@@ -540,13 +540,13 @@ discussions, not silent re-additions to `release.yml`.
     pre-launch entry seeded (closes §8 #4). For each release tag cut, add a
     `## [<version>] - YYYY-MM-DD` section per the seeded structure;
     tag-validate enforces presence.
-[x] §8 #8 GitHub URL confirmed: `https://github.com/TriformAI/cargoless`.
+[x] §8 #8 GitHub URL confirmed: `https://github.com/IggyGG/cargoless`.
     [workspace.package].repository updated from forgejo to the GitHub URL.
     README/CONTRIBUTING URLs updated.
     cargoless content seeded to GitHub via force-push from local
     (IggyGG@laptop HTTPS+PAT; operator-cleared after license-vs-MIT
     placeholder reconciliation; Apache-2.0 per CLAUDE.md preserved).
-    End-to-end `cargo install --git https://github.com/TriformAI/
+    End-to-end `cargo install --git https://github.com/IggyGG/
     cargoless.git tf-cli --branch main --locked` verified in a clean
     cargoless-builder pod env (7s install, working `tftrunk` binary).
 [x] §8 #9 mirror direction: option (a) push-mirror — LIVE.
