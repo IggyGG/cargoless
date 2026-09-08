@@ -17,11 +17,11 @@
 # THE TWO CORRECTIONS THAT build-serve-image.yaml STILL LACKS — both are in this
 # file deliberately; do not "simplify" them away:
 #
-#   1. GIT CONTEXT IS FORGEJO, NOT GITHUB. The serve template still says
-#      `git://github.com/TriformAI/cargoless.git`. This repo lives on
-#      forgejo.triform.dev; a GitHub context fails to clone (and the egress
-#      NetworkPolicy only permits the forge). Use the FULL 40-char sha —
-#      resolve it with `git rev-parse`, never hand-write it.
+#   1. GIT CONTEXT IS FORGEJO, NOT THE PUBLIC MIRROR. The canonical public
+#      home is `https://github.com/IggyGG/cargoless`, but integration builds
+#      clone forgejo.triform.dev because the egress NetworkPolicy permits only
+#      the forge. Use the FULL 40-char sha — resolve it with `git rev-parse`,
+#      never hand-write it.
 #
 #   2. EXCLUDE triform-1. It is the single control-plane host and
 #      `workload-triform1-exclusion-audit` is AUDIT-mode, so a 12-CPU/24Gi build
