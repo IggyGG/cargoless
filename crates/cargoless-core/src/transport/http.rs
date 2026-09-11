@@ -14,6 +14,7 @@
 //!   one `data: <json>\n\n` frame per transition (the "react in real
 //!   time to red" agent-orchestration case, §11)
 //! * `GET /admin/active`                     → quiesce/drain counters
+//! * `POST /admin/quiesce-hold`              → drain verdict work and stay paused.
 //! * `POST /admin/quiesce`                   → refuse new pushes, drain,
 //!   then let the daemon exit cleanly for restart
 //! * `POST /batch-check`                     → native batch gate report
@@ -1009,6 +1010,28 @@ fn handle(
             "application/json",
             &daemon_activity_to_json(&activity),
         );
+        return;
+    }
+
+    // Authenticated, bodyless held drain. Ordinary /admin/quiesce retains
+    // its existing drain-and-exit contract. Older service adapters fail closed.
+    if req.method == "POST" && req.path == "/admin/quiesce-hold" {
+        match svc.request_quiesce_hold() {
+            Some(activity) => write_response(
+                &mut writer,
+                200,
+                "OK",
+                "application/json",
+                &daemon_activity_to_json(&activity),
+            ),
+            None => write_response(
+                &mut writer,
+                501,
+                "Not Implemented",
+                "application/json",
+                r#"{"error":"held drain is not supported by this service"}"#,
+            ),
+        }
         return;
     }
 
@@ -3533,6 +3556,7 @@ mod tests {
         for route in [
             "/admin/active",
             "/admin/quiesce",
+            "/admin/quiesce-hold",
             "/status?worktree=green-wt",
             "/verdict?worktree=red-wt",
             "/worktrees",
@@ -3697,6 +3721,61 @@ mod tests {
         std::thread::sleep(Duration::from_millis(50));
         assert_eq!(raw_get(denied.addr(), "/admin/active").0, 401);
         assert_eq!(raw_post(denied.addr(), "/admin/quiesce", "", None).0, 401);
+        assert_eq!(
+            raw_post(denied.addr(), "/admin/quiesce-hold", "", None).0,
+            401
+        );
+        assert_eq!(raw_post(s.addr(), "/admin/quiesce-hold", "", None).0, 501);
+    }
+
+    #[test]
+    fn held_drain_route_calls_supported_service_only_on_authenticated_post() {
+        struct HeldService(std::sync::atomic::AtomicUsize);
+        impl VerdictService for HeldService {
+            fn get_status(&self, _w: &str) -> Option<WorktreeStatus> {
+                None
+            }
+            fn get_verdict(&self, _w: &str) -> Option<String> {
+                None
+            }
+            fn get_diagnostics(&self, _w: &str) -> Vec<Diagnostic> {
+                Vec::new()
+            }
+            fn list_worktrees(&self) -> Vec<WorktreeSummary> {
+                Vec::new()
+            }
+            fn subscribe(&self) -> Receiver<TransitionEvent> {
+                channel().1
+            }
+            fn request_quiesce_hold(&self) -> Option<DaemonActivity> {
+                self.0.fetch_add(1, Ordering::SeqCst);
+                Some(DaemonActivity {
+                    quiescing: true,
+                    ..DaemonActivity::default()
+                })
+            }
+        }
+        struct DenyAll;
+        impl Authorizer for DenyAll {
+            fn authorize(&self, _t: Option<&str>) -> bool {
+                false
+            }
+        }
+        let service = Arc::new(HeldService(std::sync::atomic::AtomicUsize::new(0)));
+        let denied = HttpServer::bind("127.0.0.1:0", service.clone(), Arc::new(DenyAll)).unwrap();
+        let allowed = HttpServer::bind("127.0.0.1:0", service.clone(), Arc::new(AllowAll)).unwrap();
+        std::thread::sleep(Duration::from_millis(50));
+        assert_eq!(
+            raw_post(denied.addr(), "/admin/quiesce-hold", "", None).0,
+            401
+        );
+        assert_eq!(service.0.load(Ordering::SeqCst), 0);
+        assert_ne!(raw_get(allowed.addr(), "/admin/quiesce-hold").0, 200);
+        assert_eq!(service.0.load(Ordering::SeqCst), 0);
+        let (code, body) = raw_post(allowed.addr(), "/admin/quiesce-hold", "", None);
+        assert_eq!(code, 200);
+        assert!(body.contains("\"quiescing\":true"));
+        assert_eq!(service.0.load(Ordering::SeqCst), 1);
     }
 
     #[test]
