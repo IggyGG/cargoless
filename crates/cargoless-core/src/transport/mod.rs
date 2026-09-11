@@ -689,6 +689,14 @@ pub trait VerdictService: Send + Sync {
         self.daemon_activity()
     }
 
+    /// Admin write: refuse new work and stay alive after draining. This lets
+    /// an operator verify a stable idle process before removing its routes.
+    /// Unlike ordinary quiesce, this must not trigger an automatic restart.
+    /// None explicitly means unsupported; never treat a no-op as a held drain.
+    fn request_quiesce_hold(&self) -> Option<DaemonActivity> {
+        None
+    }
+
     /// A6 — RA-warm readiness, the `GET /readyz` probe input. `true` means
     /// the service can produce a meaningful verdict NOW (for the serve
     /// daemon: a rust-analyzer instance has completed its LSP handshake

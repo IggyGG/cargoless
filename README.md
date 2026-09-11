@@ -633,6 +633,8 @@ For the launch-hardening evidence trail, see
 
 ---
 
+For operator-controlled removal of verdict daemons, see [held drain](docs/operator/HELD-DRAIN.md).
+
 ## Workspace
 
 | Crate | Role |

@@ -954,7 +954,7 @@ pub fn run(scope: RepoScope, parent: &ParentWatch) -> ExitCode {
                 );
                 quiesce_announced = true;
             }
-            if api.drain_complete() {
+            if api.drain_exit_ready() {
                 crate::ui::warn("quiesce drain complete — exiting cleanly for restart.");
                 break;
             }

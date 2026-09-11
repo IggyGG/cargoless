@@ -990,6 +990,7 @@ fn finish_project_check_run<T>(
 #[derive(Default)]
 struct DrainState {
     quiescing: bool,
+    hold_after_drain: bool,
     active_worktrees: BTreeSet<String>,
 }
 
@@ -4054,11 +4055,12 @@ impl ServeVerdictState {
         poisoned(&self.drain).quiescing
     }
 
-    pub fn drain_complete(&self) -> bool {
+    pub fn drain_exit_ready(&self) -> bool {
         let drain = poisoned(&self.drain);
         let batch_counts = self.batch_coalescer.counts();
         let (witness_inflight, witness_waiting) = self.witness_gate.counts();
         drain.quiescing
+            && !drain.hold_after_drain
             && drain.active_worktrees.is_empty()
             && poisoned(&self.pushed).is_empty()
             && batch_counts.waiters == 0
@@ -5354,9 +5356,25 @@ impl VerdictService for ServeVerdictState {
         {
             let mut drain = poisoned(&self.drain);
             drain.quiescing = true;
+            drain.hold_after_drain = false;
         }
         self.batch_coalescer.cv.notify_all();
         self.activity_snapshot()
+    }
+
+    fn request_quiesce_hold(&self) -> Option<DaemonActivity> {
+        // The separate build lane has its own queue/lifecycle and is not
+        // represented by DaemonActivity. Do not claim to pause that lane.
+        if self.lane.is_some() {
+            return None;
+        }
+        {
+            let mut drain = poisoned(&self.drain);
+            drain.hold_after_drain = true;
+            drain.quiescing = true;
+        }
+        self.batch_coalescer.cv.notify_all();
+        Some(self.activity_snapshot())
     }
 }
 
@@ -14153,7 +14171,7 @@ checks:
         assert_eq!(consumed.files, files);
         assert_eq!(api.daemon_activity().pending_pushes, 0);
         assert!(
-            !api.drain_complete(),
+            !api.drain_exit_ready(),
             "publishing the accepted push's verdict is the drain boundary"
         );
 
@@ -14167,7 +14185,44 @@ checks:
                 ..DaemonActivity::default()
             }
         );
-        assert!(api.drain_complete());
+        assert!(api.drain_exit_ready());
+    }
+
+    #[test]
+    fn held_drain_preserves_accepted_work_and_stays_paused_when_idle() {
+        let api = ServeVerdictState::new();
+        let files = vec![("/wt/src/lib.rs".to_string(), "pub fn x() {}".to_string())];
+        assert!(api.push_overlay("/wt", "main", &files).accepted);
+        let activity = api.request_quiesce_hold().expect("held drain supported");
+        assert!(activity.quiescing);
+        assert_eq!(activity.active_worktrees, 1);
+        assert!(!api.drain_exit_ready());
+        assert!(!api.push_overlay("/new", "main", &files).accepted);
+        assert_eq!(api.take_overlay_for("/wt").unwrap().files, files);
+        api.publish(Path::new("/wt"), crate::statusfile::VerdictPayload::green());
+        assert_eq!(api.daemon_activity().active_worktrees, 0);
+        assert_eq!(api.daemon_activity().pending_pushes, 0);
+        assert!(!api.drain_exit_ready(), "idle held drain must not restart");
+        assert!(!api.push_overlay("/after-drain", "main", &files).accepted);
+        assert!(api.request_quiesce_hold().unwrap().quiescing);
+        assert!(!api.drain_exit_ready(), "held drain is idempotent");
+        // The existing authenticated restart operation explicitly releases
+        // the hold; it still cannot exit before accepted work has finished.
+        api.request_quiesce();
+        assert!(api.drain_exit_ready());
+    }
+
+    #[test]
+    fn releasing_held_drain_still_waits_for_accepted_work() {
+        let api = ServeVerdictState::new();
+        let files = vec![("/wt/src/lib.rs".to_string(), "pub fn x() {}".to_string())];
+        assert!(api.push_overlay("/wt", "main", &files).accepted);
+        api.request_quiesce_hold().unwrap();
+        api.request_quiesce();
+        assert!(!api.drain_exit_ready());
+        api.take_overlay_for("/wt").unwrap();
+        api.publish(Path::new("/wt"), crate::statusfile::VerdictPayload::green());
+        assert!(api.drain_exit_ready());
     }
 
     #[test]
@@ -14175,7 +14230,7 @@ checks:
         // Live finding, 2026-08-04: witness A reported active_worktrees=0
         // while inflight_witness_compiles=1. The worktree tracker is a set;
         // a same-key publish can remove its one entry while another witness
-        // worker for that key is still queued or compiling. drain_complete()
+        // worker for that key is still queued or compiling. drain_exit_ready()
         // must therefore consume the witness gate's independent counters,
         // not infer worker liveness from active_worktrees.
         let mut api = ServeVerdictState::new();
@@ -14191,18 +14246,18 @@ checks:
         assert_eq!(activity.inflight_witness_compiles, 1);
         assert_eq!(activity.waiting_witness_compiles, 1);
         assert!(
-            !api.drain_complete(),
+            !api.drain_exit_ready(),
             "a queued or running witness is accepted work and must survive rollout"
         );
 
         api.witness_gate.waiting.store(0, Ordering::Relaxed);
         assert!(
-            !api.drain_complete(),
+            !api.drain_exit_ready(),
             "the running witness alone still keeps the daemon alive"
         );
         *poisoned(&api.witness_gate.state) = 0;
         assert!(
-            api.drain_complete(),
+            api.drain_exit_ready(),
             "drain completes only after both counters reach zero"
         );
     }
